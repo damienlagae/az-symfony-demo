@@ -79,8 +79,8 @@ class PostType extends AbstractType
             ->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
                 /** @var Post */
                 $post = $event->getData();
-                if (null === $post->getSlug() && null !== $post->getTitle()) {
-                    $post->setSlug($this->slugger->slug($post->getTitle())->lower());
+                if (null !== $postTitle = $post->getTitle()) {
+                    $post->setSlug($this->slugger->slug($postTitle)->lower());
                 }
             })
         ;

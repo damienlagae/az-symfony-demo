@@ -36,6 +36,9 @@ class AppExtension extends AbstractExtension
         $this->localeCodes = $localeCodes;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getFunctions(): array
     {
         return [

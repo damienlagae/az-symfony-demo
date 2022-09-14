@@ -34,8 +34,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @author Ryan Weaver <weaverryan@gmail.com>
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  */
-#[Route('/admin/post')]
-#[IsGranted('ROLE_ADMIN')]
+#[Route('/admin/post'), IsGranted('ROLE_ADMIN')]
 class BlogController extends AbstractController
 {
     /**
@@ -49,8 +48,10 @@ class BlogController extends AbstractController
      *     could move this annotation to any other controller while maintaining
      *     the route name and therefore, without breaking any existing link.
      */
-    #[Route('/', methods: ['GET'], name: 'admin_index')]
-    #[Route('/', methods: ['GET'], name: 'admin_post_index')]
+    #[
+        Route('/', methods: ['GET'], name: 'admin_index'),
+        Route('/', methods: ['GET'], name: 'admin_post_index'),
+    ]
     public function index(PostRepository $posts): Response
     {
         $authorPosts = $posts->findBy(['author' => $this->getUser()], ['publishedAt' => 'DESC']);
@@ -111,7 +112,7 @@ class BlogController extends AbstractController
     public function show(Post $post): Response
     {
         // This security check can also be performed
-        // using a PHP attribute: #[IsGranted('show', subject: 'post', message: 'Posts can only be shown to their authors.')]
+        // using an annotation: @IsGranted("show", subject="post", message="Posts can only be shown to their authors.")
         $this->denyAccessUnlessGranted(PostVoter::SHOW, $post, 'Posts can only be shown to their authors.');
 
         return $this->render('admin/blog/show.html.twig', [
