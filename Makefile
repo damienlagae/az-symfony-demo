@@ -29,6 +29,8 @@ install-up: bin-install docker-up composer-install wait db-schema assets
 
 install: install-up docker-down ## Install requirements (create database, install php dependencies and build assets)
 
+update: docker-update composer-update yarn-upgrade ## Update dependencies
+
 run: install-up symfony-start ## Start docker and start the web server
 
 abort: docker-down symfony-stop ## Stop docker and the Symfony binary server
@@ -99,6 +101,9 @@ docker-phpqa-up: docker-compose.yaml ## Start the phpqa container
 docker-wait-database: docker-compose.yaml ## Wait for docker [database] to be ready
 	@bin/wait-for-database.sh
 
+docker-update: docker-compose.yaml ## Update docker images
+	$(DOCKER_ENV) $(DOCKER) pull
+
 ## —— CI: Tests ✅ —————————————————————————————————————————————————————————————
 tests: ## Run the PHPUnit tests
 	$(PHP) vendor/bin/simple-phpunit install
@@ -132,3 +137,6 @@ yarn-install: package.json ## Install yarn packages
 
 yarn-build: yarn-install ## Run Webpack Encore to compile production assets
 	@$(YARN) build
+
+yarn-upgrade: yarn-install ## Upgrade yarn packages
+	$(YARN) upgrade
